@@ -23,9 +23,4 @@ const UserSchema = new Schema({
     timestamps: true,
 });
 
-UserSchema.method('toJSON', function() {
-    const { password, ...object } = this.toObject();
-    return object;
-});
-
 export const UserModel = model('User', UserSchema);

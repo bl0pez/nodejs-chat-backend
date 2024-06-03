@@ -4,6 +4,7 @@ import { JwtAdapter } from "../config/jwt.adapter";
 import { UserModel } from "../data/mongo/models/user.model";
 import { LoginUserDto } from "./dto/login-user.dto";
 import { RegisterUserDto } from "./dto/register-user.dto";
+import { UserEntity } from "./entities/user.entity";
 
 export class AuthService {
   constructor() {}
@@ -23,8 +24,10 @@ export class AuthService {
       const token = await JwtAdapter.generateToken({ id: user._id });
       if (!token) throw CustomError.internalServer("Error while creating JWT");
 
+      const userEntity = UserEntity.fromObject(user);
+
       return {
-        user,
+        user: userEntity,
         token: token,
       };
     } catch (error) {
@@ -45,8 +48,10 @@ export class AuthService {
     const token = await JwtAdapter.generateToken({ id: user._id });
     if (!token) throw CustomError.internalServer("Error while creating JWT");
 
+    const userEntity = UserEntity.fromObject(user);
+
     return {
-      user,
+      user: userEntity,
       token: token,
     };
   }
@@ -57,12 +62,15 @@ export class AuthService {
     if (!decoded) throw CustomError.unauthorized("Invalid token");
 
     const user = await UserModel.findById(decoded.id);
+    if (!user) throw CustomError.unauthorized("Invalid token - user");
 
     const newToken = await JwtAdapter.generateToken({ id: decoded });
     if (!newToken) throw CustomError.internalServer("Error while creating JWT");
 
+    const userEntity = UserEntity.fromObject(user);
+
     return {
-      user,
+      user: userEntity,
       token: newToken,
     };
   }

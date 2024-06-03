@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { JwtAdapter } from "../config";
 import { UserModel } from "../data/mongo/models/user.model";
+import { UserEntity } from "../auth/entities/user.entity";
 
 export class AuthMiddleware {
   static async validateJWT(req: Request, res: Response, next: NextFunction) {
@@ -19,7 +20,7 @@ export class AuthMiddleware {
       const user = await UserModel.findById(payload.id);
       if (!user) return res.status(401).json({ error: "Invalid token - user" });
 
-      req.body.user = user;
+      req.body.user = UserEntity.fromObject(user);
 
       next();
     } catch (error) {
