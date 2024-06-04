@@ -8,7 +8,7 @@ export class MessageControllers {
     const user = req.body.user;
     const from = req.params.from;
 
-    return res.json({ user, from })
+    return res.json({ from, user })
 
   }
 }
