@@ -56,15 +56,16 @@ export class AuthService {
     };
   }
 
-  public async renewToken(token: string) {
-    
+  public async renewToken(token: string) {    
     const decoded = await JwtAdapter.validateToken<{ id: string }>(token);
     if (!decoded) throw CustomError.unauthorized("Invalid token");
 
-    const user = await UserModel.findById(decoded.id);
+    const { id } = decoded;
+
+    const user = await UserModel.findById(id);
     if (!user) throw CustomError.unauthorized("Invalid token - user");
 
-    const newToken = await JwtAdapter.generateToken({ id: decoded });
+    const newToken = await JwtAdapter.generateToken({ id: user._id });
     if (!newToken) throw CustomError.internalServer("Error while creating JWT");
 
     const userEntity = UserEntity.fromObject(user);
