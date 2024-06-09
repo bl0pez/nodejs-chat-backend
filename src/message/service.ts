@@ -24,9 +24,9 @@ export class MessageService {
         { from: userId, to: to },
         { from: to, to: userId}
       ]
-    }).sort({ createdAt: "asc" }).limit(30);
+    }).sort({ createdAt: "desc" }).limit(30);
 
-    return last30.map((message) => MessageEntity.fromObject(message));
+    return last30.map((message) => MessageEntity.fromObject(message)).reverse();
   }
 
 }
