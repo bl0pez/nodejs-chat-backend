@@ -23,14 +23,13 @@ export class UserService {
         return UserEntity.fromObject(user);
     }
 
-    public async getUsers() {
+    public async findAllChatUsers() {
         const users = await UserModel.find().sort("-online");
-
         return users.map((user) => UserEntity.fromObject(user));
     }
 
     public async findOtherUsers(id: string) {
-        const users = await UserModel.find({ _id: { $ne: id } });
+        const users = await UserModel.find({ _id: { $ne: id } }).sort("-online");
 
         return users.map((user) => UserEntity.fromObject(user));
     }

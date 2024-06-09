@@ -10,7 +10,7 @@ export class MessageRoutes {
 
     const controller = new MessageControllers(authService);
 
-    router.get('/:from', [AuthMiddleware.validateJWT],controller.findMessages);
+    router.get('/:from', [AuthMiddleware.validateJWT], controller.findUserToUserConversation);
 
     
     return router;
